@@ -1,15 +1,36 @@
+using DotNetEnv;
+using System.Text.Json.Serialization;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+Env.Load();
+builder.Configuration.AddEnvironmentVariables();
+var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+var dbPort = Environment.GetEnvironmentVariable("DB_PORT");
+var dbDatabaseName = Environment.GetEnvironmentVariable("DB_DATABASE");
+var dbUser = Environment.GetEnvironmentVariable("DB_USERNAME");
+var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
+
+var mySqlConnection = $"server={dbHost};port={dbPort};database={dbDatabaseName};uid={dbUser};password={dbPassword}";
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = null; 
+        options.JsonSerializerOptions.WriteIndented = true; 
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
+
+
+
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -17,6 +38,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+//ventana de bienvenida
+app.UseWelcomePage(
+    options: new WelcomePageOptions
+    {
+        Path = "/"
+    }
+);
+
 
 app.UseAuthorization();
 
