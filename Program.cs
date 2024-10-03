@@ -1,5 +1,7 @@
 using DotNetEnv;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using TechStore.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,20 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
 
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseMySql(mySqlConnection, ServerVersion.Parse("8.0.20-mysql"))); 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
+
 
 
 
@@ -30,15 +46,14 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c => 
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "TechStore API V1");
+    c.RoutePrefix = string.Empty;
+});
 
 app.UseHttpsRedirection();
-//ventana de bienvenida
 app.UseWelcomePage(
     options: new WelcomePageOptions
     {
@@ -46,7 +61,7 @@ app.UseWelcomePage(
     }
 );
 
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
