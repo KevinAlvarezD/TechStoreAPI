@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TechStore.Models;
 
-public class Orders
+public class Order
 {
     public int Id { get; set; }
     public int CustomerId { get; set; }
