@@ -67,14 +67,14 @@ namespace TechStoreAPI.Services
             }
         }
 
-        public Task<IEnumerable<Customer>> GetAll()
+        public async Task<IEnumerable<Customer>> GetAll()
         {
-            throw new NotImplementedException();
+            return await _context.Customers.ToListAsync();
         }
 
-        public Task<Customer?> GetById(int id)
+        public async Task<Customer?> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Customers.FindAsync(id);
         }
 
         public Task Update(Customer customer)

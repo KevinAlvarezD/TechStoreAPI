@@ -10,6 +10,22 @@ namespace TechStoreAPI.Controllers.V1.Customers
 {
     public partial class CustomersController : ControllerBase
     {
-        
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Customer>>> GetAll()
+        {
+            var customer = await _customerRepository.GetAll();
+            return Ok(customer);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Customer>> GetById(int id)
+        {
+            var customer = await _customerRepository.GetById(id);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+            return customer;
+        }
     }
 }
