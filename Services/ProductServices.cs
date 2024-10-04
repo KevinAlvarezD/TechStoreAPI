@@ -66,19 +66,36 @@ namespace TechStoreAPI.Services
             }
         }
 
-        public Task<IEnumerable<Product>> GetAll()
+        public async Task<IEnumerable<Product>> GetAll()
         {
-            throw new NotImplementedException();
+            return await _context.Products.Include(o => o.Category).ToListAsync();
         }
 
-        public Task<Product?> GetById(int id)
+        public async Task<Product?> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Products.Include(p => p.Category).FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public Task Update(Product product)
+        public async Task Update(Product product)
         {
-            throw new NotImplementedException();
+            if (product == null)
+            {
+                throw new ArgumentNullException(nameof(product), "El producto no puede ser nulo.");
+            }
+
+            try
+            {
+                _context.Entry(product).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException dbEx)
+            {
+                throw new Exception("Error al actualizar el producto en la base de datos.", dbEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ocurrió un error inesperado al actualizar el producto.", ex);
+            }
         }
     }
 }
