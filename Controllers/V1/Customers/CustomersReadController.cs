@@ -14,6 +14,11 @@ namespace TechStoreAPI.Controllers.V1.Customers
         public async Task<ActionResult<IEnumerable<Customer>>> GetAll()
         {
             var customer = await _customerRepository.GetAll();
+            if (customer == null ||!customer.Any())
+            {
+                return NotFound();
+            }
+            
             return Ok(customer);
         }
 

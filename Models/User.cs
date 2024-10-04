@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace TechStore.Models;
 
+
+[Table("users")]
 public class User
 {
     [Key]
@@ -16,6 +18,9 @@ public class User
 
     [Column ("username")]
     public string? Username { get; set; }
+
+    [Column ("email")]
+    public string? Email { get; set; }
 
     [Column ("password")]
     public string? Password { get; set; }

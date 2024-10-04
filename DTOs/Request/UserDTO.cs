@@ -13,6 +13,11 @@ public class UserDTO
     public required string Username { get; set; }
 
 
+    [Required(ErrorMessage = "El email es obligatorio.")]
+    [EmailAddress(ErrorMessage = "El email no es valido.")]
+    public required string Email { get; set; }
+
+
     [Required(ErrorMessage = "la contraseña es obligatoria.")]
     [StringLength(550, ErrorMessage = "El nombre no puede exceder los 550 caracteres.")]
     public required string Password { get; set; }

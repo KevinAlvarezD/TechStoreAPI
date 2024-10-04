@@ -2,6 +2,8 @@ using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using TechStore.Data;
+using TechStoreAPI.Repositories;
+using TechStoreAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,13 +19,17 @@ var mySqlConnection = $"server={dbHost};port={dbPort};database={dbDatabaseName};
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        options.JsonSerializerOptions.PropertyNamingPolicy = null; 
-        options.JsonSerializerOptions.WriteIndented = true; 
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+        options.JsonSerializerOptions.WriteIndented = true;
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(mySqlConnection, ServerVersion.Parse("8.0.20-mysql"))); 
+    options.UseMySql(mySqlConnection, ServerVersion.Parse("8.0.20-mysql")));
+
+
+builder.Services.AddScoped<ICustomerRepository, CostumerServices>();
+builder.Services.AddScoped<ICategoryRepository, CategoryServices>();
 
 builder.Services.AddCors(options =>
 {
@@ -37,8 +43,6 @@ builder.Services.AddCors(options =>
 });
 
 
-
-
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -47,7 +51,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 app.UseSwagger();
-app.UseSwaggerUI(c => 
+app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "TechStore API V1");
     c.RoutePrefix = string.Empty;

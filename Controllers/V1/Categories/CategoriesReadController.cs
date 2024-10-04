@@ -13,6 +13,11 @@ namespace TechStoreAPI.Controllers.V1.Categories
         public async Task<ActionResult<IEnumerable<Category>>> GetAll()
         {
             var category = await _categoryRepository.GetAll();
+            if (category == null || !category.Any())
+            {
+                return NotFound();
+            }
+
             return Ok(category);
         }
 
