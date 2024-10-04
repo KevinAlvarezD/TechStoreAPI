@@ -11,7 +11,6 @@ namespace TechStoreAPI.Controllers.V1.Customers;
 [Route("api/v1/customer")]
 
 public partial class CustomersController(ICustomerRepository customerRepository)  : ControllerBase
-{
+{    
     protected readonly ICustomerRepository _customerRepository = customerRepository;
-    
 }
