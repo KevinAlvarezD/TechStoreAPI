@@ -40,14 +40,30 @@ namespace TechStoreAPI.Services
             }
         }
 
-        public Task<bool> CheckExistence(int id)
+        public async Task<bool> CheckExistence(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _context.Products.AnyAsync(p => p.Id == id);
+            }
+            catch (DbUpdateException dbEx)
+            {
+                throw new Exception("Error al agregar el producto a la base de datos.", dbEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ocurrió un error inesperado al agregar el producto.", ex);
+            }
         }
 
-        public Task Delete(int id)
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            var product = await _context.Products.FindAsync(id);
+            if (product != null)
+            {
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public Task<IEnumerable<Product>> GetAll()
