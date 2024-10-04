@@ -9,11 +9,8 @@ namespace TechStoreAPI.Controllers.V1.Categories;
 
 [ApiController]
 [Route("api/[controller]")]
-public partial class CategoriesController : ControllerBase
+public partial class CategoriesController(ICategoryRepository categoryRepository)  : ControllerBase
 {
-    private readonly ICategoryRepository _categoryRepository;
-    public CategoriesController(ICategoryRepository categoryRepository)
-    {
-        _categoryRepository = categoryRepository;
-    }
+    protected readonly ICategoryRepository _categoryRepository = categoryRepository;
+    
 }
