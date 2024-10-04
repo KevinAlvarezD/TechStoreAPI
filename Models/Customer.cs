@@ -27,4 +27,13 @@ public class Customer
     [Column("email")]
     public string? Email { get; set; }
 
+
+    public Customer(string name, string address, string phone, string email)
+    {
+        Name = name.ToLower().Trim();
+        Address = address.ToLower().Trim();
+        Phone = phone.ToLower().Trim();
+        Email = email.ToLower().Trim();
+    }
+
 }

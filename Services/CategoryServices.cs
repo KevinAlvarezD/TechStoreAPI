@@ -77,7 +77,6 @@ public class CategoryServices : ICategoryRepository
             throw new Exception("Ocurrió un error inesperado al actualizar la categoria.", ex);
         }
     }
-
     public async Task<bool> CheckExistence(int id)
     {
         try
