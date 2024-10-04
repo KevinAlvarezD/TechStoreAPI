@@ -67,9 +67,9 @@ namespace TechStoreAPI.Services
             }
         }
 
-        public Task<IEnumerable<User>> GetAll()
+        public async Task<IEnumerable<User>> GetAll()
         {
-            throw new NotImplementedException();
+            return await _context.Users.ToListAsync();
         }
 
         public Task<User?> GetById(int id)
