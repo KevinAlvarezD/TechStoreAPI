@@ -8,9 +8,9 @@ using TechStoreAPI.Repositories;
 namespace TechStoreAPI.Controllers.V1.Categories;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/categories")]
 public partial class CategoriesController(ICategoryRepository categoryRepository)  : ControllerBase
 {
     protected readonly ICategoryRepository _categoryRepository = categoryRepository;
-    
+
 }

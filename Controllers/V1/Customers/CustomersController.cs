@@ -8,7 +8,7 @@ using TechStoreAPI.Repositories;
 namespace TechStoreAPI.Controllers.V1.Customers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/customer")]
 
 public partial class CustomersController(ICustomerRepository customerRepository)  : ControllerBase
 {
