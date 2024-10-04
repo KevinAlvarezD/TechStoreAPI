@@ -77,9 +77,26 @@ namespace TechStoreAPI.Services
             return await _context.Users.FindAsync(id);
         }
 
-        public Task Update(User user)
+        public async Task Update(User user)
         {
-            throw new NotImplementedException();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user), "El usuario no puede ser nulo.");
+            }
+
+            try
+            {
+                _context.Entry(user).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException dbEx)
+            {
+                throw new Exception("Error al actualizar el usuario en la base de datos.", dbEx);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ocurrió un error inesperado al actualizar el usuario.", ex);
+            }
         }
     }
 }
