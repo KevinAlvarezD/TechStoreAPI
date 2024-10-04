@@ -21,5 +21,19 @@ namespace TechStoreAPI.Controllers.V1.Users
 
             return Ok(user);
         }
+
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<User>> GetById(int id)
+        {
+            var user = await _userRepository.GetById(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return user;
+        }
     }
+
+    
 }

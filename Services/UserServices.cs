@@ -72,9 +72,9 @@ namespace TechStoreAPI.Services
             return await _context.Users.ToListAsync();
         }
 
-        public Task<User?> GetById(int id)
+        public async Task<User?> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Users.FindAsync(id);
         }
 
         public Task Update(User user)
