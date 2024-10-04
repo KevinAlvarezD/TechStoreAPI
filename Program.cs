@@ -30,6 +30,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped<ICustomerRepository, CostumerServices>();
 builder.Services.AddScoped<ICategoryRepository, CategoryServices>();
+builder.Services.AddScoped<IOrderRepository, OrderServices>();
 
 builder.Services.AddCors(options =>
 {
