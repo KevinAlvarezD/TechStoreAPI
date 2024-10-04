@@ -15,6 +15,6 @@ public class CategoryDTO
 
 
     [Required(ErrorMessage = "La descripcion es obligatorio.")]
-    [StringLength(50, ErrorMessage = "La descripcion no puede exceder los 50 caracteres.")]
+    [StringLength(100, ErrorMessage = "La descripcion no puede exceder los 100 caracteres.")]
     public required string Description { get; set; }
 }
