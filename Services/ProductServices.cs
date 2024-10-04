@@ -39,7 +39,6 @@ namespace TechStoreAPI.Services
                 throw new Exception("Ocurrió un error inesperado al agregar el producto.", ex);
             }
         }
-
         public async Task<bool> CheckExistence(int id)
         {
             try
@@ -55,7 +54,6 @@ namespace TechStoreAPI.Services
                 throw new Exception("Ocurrió un error inesperado al agregar el producto.", ex);
             }
         }
-
         public async Task Delete(int id)
         {
             var product = await _context.Products.FindAsync(id);
@@ -65,17 +63,14 @@ namespace TechStoreAPI.Services
                 await _context.SaveChangesAsync();
             }
         }
-
         public async Task<IEnumerable<Product>> GetAll()
         {
             return await _context.Products.Include(o => o.Category).ToListAsync();
         }
-
         public async Task<Product?> GetById(int id)
         {
             return await _context.Products.Include(p => p.Category).FirstOrDefaultAsync(p => p.Id == id);
         }
-
         public async Task Update(Product product)
         {
             if (product == null)

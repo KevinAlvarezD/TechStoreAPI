@@ -28,4 +28,13 @@ public class User
     [Column ("role")]
     public string? Role { get; set; }
 
+
+    public User(string username, string email, string password, string role)
+    {
+        Username = username.ToLower().Trim();
+        Email = email.ToLower().Trim();
+        Password = password;
+        Role = role.ToLower().Trim();
+    }
+
 }

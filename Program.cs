@@ -32,6 +32,7 @@ builder.Services.AddScoped<ICustomerRepository, CostumerServices>();
 builder.Services.AddScoped<ICategoryRepository, CategoryServices>();
 builder.Services.AddScoped<IOrderRepository, OrderServices>();
 builder.Services.AddScoped<IProductRepository, ProductServices>();
+builder.Services.AddScoped<IUserRepository, UserServices>();
 
 builder.Services.AddCors(options =>
 {
