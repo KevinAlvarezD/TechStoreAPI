@@ -11,11 +11,11 @@ namespace TechStoreAPI.DTOs.Request
     {
         [Required(ErrorMessage = "El nombre es obligatorio.")]
         [StringLength(50, ErrorMessage = "El nombre no puede exceder los 50 caracteres.")]
-        public string? Name { get; set; }
+        public required string Name { get; set; }
 
         [Required(ErrorMessage = "La descripcion es obligatorio.")]
         [StringLength(100, ErrorMessage = "La descripcion no puede exceder los 100 caracteres.")]
-        public string? Description { get; set; }
+        public required string Description { get; set; }
 
         [Required(ErrorMessage = "El precio es requerido.")]
         [Range(0.01, double.MaxValue, ErrorMessage = "El precio tiene que ser un numero positivo mayor a 0.")]
