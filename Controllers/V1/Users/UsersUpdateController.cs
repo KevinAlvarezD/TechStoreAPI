@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TechStore.Helpers;
 using TechStore.Models;
 using TechStoreAPI.DTOs.Request;
 
@@ -32,7 +34,7 @@ namespace TechStoreAPI.Controllers.V1.Users
 
             user.Username = updatedUser.Username;
             user.Email = updatedUser.Email;
-            user.Password = updatedUser.Password = PasswordHelper.HashPassword(updatedUser.Password);
+            user.Password = updatedUser.Password = PasswordHasher.HashPassword(updatedUser.Password);
             user.Role = updatedUser.Role;
 
 

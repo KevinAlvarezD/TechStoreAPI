@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TechStore.Data;
+using TechStore.Helpers;
 using TechStore.Models;
 using TechStoreAPI.Repositories;
 
@@ -28,6 +30,8 @@ namespace TechStoreAPI.Services
 
             try
             {
+                user.Password = PasswordHasher.HashPassword(user.Password);
+
                 await _context.Users.AddAsync(user);
                 await _context.SaveChangesAsync();
             }
@@ -98,5 +102,24 @@ namespace TechStoreAPI.Services
                 throw new Exception("Ocurrió un error inesperado al actualizar el usuario.", ex);
             }
         }
+        public async Task<User?> ValidateUser(string email, string password)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                return null;
+            }
+
+            bool isPasswordValid = PasswordHasher.VerifyPassword(password, user.Password);
+
+            if (!isPasswordValid)
+            {
+                return null;
+            }
+
+            return user;
+        }
+
     }
+
 }

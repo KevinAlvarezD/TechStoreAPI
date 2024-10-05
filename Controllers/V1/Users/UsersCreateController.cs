@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TechStore.Helpers;
 using TechStore.Models;
 using TechStoreAPI.DTOs.Request;
 
@@ -21,7 +23,7 @@ namespace TechStoreAPI.Controllers.V1.Users
             var newUser = new User(
             inputUser.Username,
             inputUser.Email,
-            inputUser.Password = PasswordHelper.HashPassword(inputUser.Password),
+            inputUser.Password = PasswordHasher.HashPassword(inputUser.Password),
             inputUser.Role
             );
 
