@@ -120,6 +120,24 @@ namespace TechStoreAPI.Services
             return user;
         }
 
+        public async Task<string?> Login(string email, string password, string secretKey)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                return null;
+            }
+
+            bool isPasswordValid = PasswordHasher.VerifyPassword(password, user.Password);
+
+            if (!isPasswordValid)
+            {
+                return null;
+            }
+
+            return JwtTokenHelper.GenerateToken(user.Username, user.Role, secretKey);
+        }
+
     }
 
 }
