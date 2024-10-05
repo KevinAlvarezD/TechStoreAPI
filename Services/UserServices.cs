@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TechStore.Data;
 using TechStore.Helpers;
@@ -119,8 +113,7 @@ namespace TechStoreAPI.Services
 
             return user;
         }
-
-        public async Task<string?> Login(string email, string password, string secretKey)
+        public async Task<string?> login(string email, string password, string secretKey)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
             if (user == null)
@@ -133,11 +126,20 @@ namespace TechStoreAPI.Services
             if (!isPasswordValid)
             {
                 return null;
-            }
 
+            }
             return JwtTokenHelper.GenerateToken(user.Username, user.Role, secretKey);
         }
 
+        public User GetUserByEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                throw new ArgumentException("Email cannot be null or empty", nameof(email));
+            }
+
+            return _context.Users.FirstOrDefault(u => u.Email == email);
+        }
     }
 
 }
