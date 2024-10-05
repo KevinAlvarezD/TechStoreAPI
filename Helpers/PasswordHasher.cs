@@ -1,10 +1,17 @@
-using Microsoft.AspNetCore.Identity;
 using BCrypt.Net;
-
-public static class PasswordHelper
+namespace TechStore.Helpers
 {
-    public static string HashPassword(string password)
+    public static class PasswordHasher
     {
-        return BCrypt.Net.BCrypt.HashPassword(password);
+        
+        public static string HashPassword(string password)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(password);
+        }
+
+        public static bool VerifyPassword(string password, string hashedPassword)
+        {
+            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+        }
     }
 }

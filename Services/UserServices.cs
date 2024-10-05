@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using TechStore.Data;
+using TechStore.Helpers;
 using TechStore.Models;
 using TechStoreAPI.Repositories;
 
@@ -28,6 +24,8 @@ namespace TechStoreAPI.Services
 
             try
             {
+                user.Password = PasswordHasher.HashPassword(user.Password);
+
                 await _context.Users.AddAsync(user);
                 await _context.SaveChangesAsync();
             }
@@ -98,5 +96,50 @@ namespace TechStoreAPI.Services
                 throw new Exception("Ocurrió un error inesperado al actualizar el usuario.", ex);
             }
         }
+        public async Task<User?> ValidateUser(string email, string password)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                return null;
+            }
+
+            bool isPasswordValid = PasswordHasher.VerifyPassword(password, user.Password);
+
+            if (!isPasswordValid)
+            {
+                return null;
+            }
+
+            return user;
+        }
+        public async Task<string?> login(string email, string password, string secretKey)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                return null;
+            }
+
+            bool isPasswordValid = PasswordHasher.VerifyPassword(password, user.Password);
+
+            if (!isPasswordValid)
+            {
+                return null;
+
+            }
+            return JwtTokenHelper.GenerateToken(user.Username, user.Role, secretKey);
+        }
+
+        public User GetUserByEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                throw new ArgumentException("Email cannot be null or empty", nameof(email));
+            }
+
+            return _context.Users.FirstOrDefault(u => u.Email == email);
+        }
     }
+
 }

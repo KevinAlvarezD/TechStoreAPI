@@ -29,7 +29,6 @@ public class UserDTO
 
 }
 
-
 public class ValidRoleAttribute : ValidationAttribute
 {
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
