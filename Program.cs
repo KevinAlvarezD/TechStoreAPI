@@ -19,6 +19,10 @@ var dbUser = Environment.GetEnvironmentVariable("DB_USERNAME");
 var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
 
 var mySqlConnection = $"server={dbHost};port={dbPort};database={dbDatabaseName};uid={dbUser};password={dbPassword}";
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseMySql(mySqlConnection, ServerVersion.Parse("8.0.20-mysql")));
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -26,10 +30,6 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.WriteIndented = true;
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(mySqlConnection, ServerVersion.Parse("8.0.20-mysql")));
-
 
 builder.Services.AddScoped<ICustomerRepository, CostumerServices>();
 builder.Services.AddScoped<ICategoryRepository, CategoryServices>();
@@ -48,8 +48,9 @@ builder.Services.AddCors(options =>
         });
 });
 
-var key = builder.Configuration["Jwt:Key"];
-var issuer = builder.Configuration["Jwt:Issuer"];
+var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
 
 builder.Services.AddAuthentication(options =>
 {
@@ -64,14 +65,12 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = issuer,
-        ValidAudience = issuer,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+        ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
+        ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET_KEY"))),
+        ClockSkew = TimeSpan.Zero
     };
 });
-
-
-builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

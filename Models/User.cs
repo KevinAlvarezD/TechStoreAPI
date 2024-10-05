@@ -23,7 +23,7 @@ public class User
     public string? Email { get; set; }
 
     [Column ("password")]
-    public string? Password { get; set; }
+    public  string Password { get; set; }
 
     [Column ("role")]
     public string? Role { get; set; }

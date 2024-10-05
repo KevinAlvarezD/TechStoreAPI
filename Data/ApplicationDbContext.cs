@@ -17,7 +17,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<Customer> Customers { get; set; }
 
 
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options){}
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options){
+    }
+
 
 
 }

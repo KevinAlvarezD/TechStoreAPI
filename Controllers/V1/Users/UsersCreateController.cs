@@ -21,6 +21,7 @@ namespace TechStoreAPI.Controllers.V1.Users
             }
 
             var newUser = new User(
+
             inputUser.Username,
             inputUser.Email,
             inputUser.Password = PasswordHasher.HashPassword(inputUser.Password),
