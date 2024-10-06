@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using TechStoreAPI.Models;
 
 namespace TechStore.Models;
 
@@ -17,7 +19,7 @@ public class Order
     public int Id { get; set; }
 
     [Column("status")]
-    public string? Status { get; set; }
+    public string Status { get; set; }
 
     [Column("order_date")]
     public DateTime OrderDate { get; set; }
@@ -29,7 +31,11 @@ public class Order
     public int CustomerId { get; set; }
 
     [ForeignKey("CustomerId")]
-    public Customer? Customer { get; set; }
+    public Customer Customer { get; set; }
+
+    public ICollection<OrderProduct> OrderProducts { get; set; }
+
+
     public Order()
     {
 

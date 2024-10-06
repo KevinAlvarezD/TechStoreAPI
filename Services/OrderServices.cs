@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TechStore.Data;
 using TechStore.Models;
+using TechStoreAPI.DTOs.Request;
+using TechStoreAPI.Models;
 using TechStoreAPI.Repositories;
 
 namespace TechStoreAPI.Services;
@@ -18,25 +20,47 @@ public class OrderServices : IOrderRepository
         _context = context;
     }
 
-    public async Task Add(Order order)
+    public async Task<Order> Add(OrderDTO orderDTO)
     {
-        if (order == null)
+        if (orderDTO == null)
         {
-            throw new ArgumentNullException(nameof(order), "La orden no puede ser nula.");
+            throw new ArgumentNullException(nameof(orderDTO), "La orden no puede ser nula.");
         }
 
         try
         {
-            await _context.Orders.AddAsync(order);
+            var newOrder = new Order
+            {
+                CustomerId = orderDTO.CustomerId,
+                OrderDate = orderDTO.OrderDate,
+                TotalAmount = orderDTO.TotalAmount,
+                Status = orderDTO.Status,
+                OrderProducts = new List<OrderProduct>()
+            };
+
+            foreach (var orderProductDTO in orderDTO.OrderProducts)
+            {
+                var product = await _context.Products.FindAsync(orderProductDTO.ProductId);
+                if (product == null)
+                {
+                    throw new ArgumentNullException(nameof(orderDTO), $"Product with ID {orderProductDTO.ProductId} not found.");
+                }
+
+                newOrder.OrderProducts.Add(new OrderProduct
+                {
+                    ProductId = product.Id,
+                    Quantity = orderProductDTO.Quantity,
+                    Order = newOrder
+                });
+            }
+
+            await _context.Orders.AddAsync(newOrder);
             await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateException dbEx)
-        {
-            throw new Exception("Error al agregar la orden a la base de datos.", dbEx);
+            return newOrder;
         }
         catch (Exception ex)
         {
-            throw new Exception("Ocurrió un error inesperado al agregar la orden.", ex);
+            throw new Exception("Error al crear la orden", ex);
         }
     }
     public async Task<bool> CheckExistence(int id)
@@ -63,33 +87,95 @@ public class OrderServices : IOrderRepository
             await _context.SaveChangesAsync();
         }
     }
-    public async Task<IEnumerable<Order>> GetAll()
+    public async Task<IEnumerable<OrderDTO>> GetAll()
     {
-        return await _context.Orders.Include(o => o.Customer).ToListAsync();
+        var orders = await _context.Orders
+            .Include(o => o.OrderProducts)
+            .ThenInclude(op => op.Product)
+            .ToListAsync();
+
+        return orders.Select(o => new OrderDTO
+        {
+            Id = o.Id,
+            Status = o.Status,
+            OrderDate = o.OrderDate,
+            TotalAmount = o.TotalAmount,
+            CustomerId = o.CustomerId,
+            Products = o.OrderProducts.Select(op => new ProductDTO
+            {
+                Name = op.Product.Name,
+                Quantity = op.Quantity,
+                Price = op.Product.Price,
+                Description = op.Product.Description,
+                CategoryId = op.Product.CategoryId
+
+            }).ToList()
+        }).ToList();
     }
-    public async Task<Order?> GetById(int id)
+    public async Task<OrderDTO> GetById(int id)
     {
-        return await _context.Orders.Include(o => o.Customer).FirstOrDefaultAsync(o => o.Id == id);
-    }
-    public async Task Update(Order order)
-    {
+        var order = await _context.Orders
+            .Include(o => o.OrderProducts)
+            .ThenInclude(op => op.Product)
+            .FirstOrDefaultAsync(o => o.Id == id);
+
         if (order == null)
         {
-            throw new ArgumentNullException(nameof(order), "La orden no puede ser nula.");
+            return null;
         }
 
-        try
+        return new OrderDTO
         {
-            _context.Entry(order).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateException dbEx)
-        {
-            throw new Exception("Error al actualizar la orden en la base de datos.", dbEx);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Ocurrió un error inesperado al actualizar la orden.", ex);
-        }
+            Id = order.Id,
+            Status = order.Status,
+            OrderDate = order.OrderDate,
+            TotalAmount = order.TotalAmount,
+            CustomerId = order.CustomerId,
+            Products = order.OrderProducts.Select(op => new ProductDTO
+            {
+                Name = op.Product.Name,
+                Quantity = op.Quantity,
+                Price = op.Product.Price,
+                Description = op.Product.Description,
+                CategoryId = op.Product.CategoryId
+            }).ToList()
+        };
     }
+    public async Task<bool> Update(int id, OrderDTO orderDTO)
+    {
+        var order = await _context.Orders
+            .Include(o => o.OrderProducts)
+            .FirstOrDefaultAsync(o => o.Id == id);
+
+        if (order == null)
+        {
+            return false;
+        }
+
+        order.Status = orderDTO.Status;
+        order.OrderDate = orderDTO.OrderDate;
+        order.TotalAmount = orderDTO.TotalAmount;
+        order.CustomerId = orderDTO.CustomerId;
+
+        order.OrderProducts.Clear();
+        foreach (var orderProductDTO in orderDTO.OrderProducts)
+        {
+            var product = await _context.Products.FindAsync(orderProductDTO.ProductId);
+            if (product == null)
+            {
+                throw new Exception($"Product with ID {orderProductDTO.ProductId} not found.");
+            }
+
+            order.OrderProducts.Add(new OrderProduct
+            {
+                ProductId = product.Id,
+                Quantity = orderProductDTO.Quantity,
+                Order = order
+            });
+        }
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
 }

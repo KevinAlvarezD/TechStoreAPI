@@ -12,18 +12,15 @@ namespace TechStoreAPI.Controllers.V1.Orders
     public partial class OrdersController : ControllerBase
     {
         [HttpPost]
-        public async Task<ActionResult<Order>> Create(OrderDTO inputOrder)
+        public async Task<ActionResult<OrderDTO>> Create(OrderDTO orderDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var newOrder = new Order();
-
-            await _orderRepository.Add(newOrder);
-
-            return Ok(newOrder);
+            var createdOrder = await _orderRepository.Add(orderDTO);
+            return CreatedAtAction(nameof(GetAll), new { id = createdOrder.Id }, createdOrder);
         }
     }
 }

@@ -68,7 +68,7 @@ public class CostumerServices : ICustomerRepository
     {
         return await _context.Customers.ToListAsync();
     }
-    public async Task<Customer?> GetById(int id)
+    public async Task<Customer> GetById(int id)
     {
         return await _context.Customers.FindAsync(id);
     }
