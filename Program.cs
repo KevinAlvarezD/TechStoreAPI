@@ -144,6 +144,3 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
-
-Console.WriteLine($"DB_HOST: {Environment.GetEnvironmentVariable("DB_HOST")}");
-Console.WriteLine($"JWT_SECRET_KEY: {Environment.GetEnvironmentVariable("JWT_SECRET_KEY")}");
