@@ -22,8 +22,14 @@ namespace TechStoreAPI.Services
                 throw new ArgumentNullException(nameof(user), "El usuario no puede ser nulo.");
             }
 
+            if (string.IsNullOrWhiteSpace(user.Password))
+            {
+                throw new ArgumentException("La contraseña no puede ser nula o vacía.", nameof(user.Password));
+            }
+
             try
             {
+                
                 user.Password = PasswordHasher.HashPassword(user.Password);
 
                 await _context.Users.AddAsync(user);

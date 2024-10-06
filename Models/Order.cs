@@ -30,15 +30,9 @@ public class Order
 
     [ForeignKey("CustomerId")]
     public Customer? Customer { get; set; }
-
-    public Order() { }
-
-    public Order(string status, DateTime order_date, double total_amount, int customer_id)
+    public Order()
     {
-        Status = status.ToLower().Trim();
-        OrderDate = order_date;
-        TotalAmount = total_amount;
-        CustomerId = customer_id;
+
     }
 
 }

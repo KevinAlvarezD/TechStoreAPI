@@ -18,7 +18,7 @@ namespace TechStoreAPI.Controllers.V1.Customers
                 return BadRequest(ModelState);
             }
 
-            var newCustomer = new Customer(inputCustomer.Name, inputCustomer.Address, inputCustomer.Email, inputCustomer.Phone);
+            var newCustomer = new Customer();
 
             await _customerRepository.Add(newCustomer);
 

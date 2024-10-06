@@ -39,7 +39,6 @@ builder.Services.AddScoped<IProductRepository, ProductServices>();
 builder.Services.AddScoped<IUserRepository, UserServices>();
 builder.Services.AddScoped<UserServices, UserServices>();
 
-
 var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
 var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
 var jwtSecretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
@@ -48,7 +47,6 @@ if (string.IsNullOrEmpty(jwtSecretKey))
 {
     throw new InvalidOperationException("JWT_SECRET_KEY is not set.");
 }
-
 
 builder.Services.AddCors(options =>
 {
@@ -60,12 +58,12 @@ builder.Services.AddCors(options =>
                   .AllowAnyHeader();
         });
 });
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
     options.AddPolicy("User", policy => policy.RequireRole("User"));
 });
-
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -137,7 +135,12 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    var seeder = new DatabaseSeeder(context);
+    seeder.Seed();
+}
 
-Console.WriteLine($"DB_HOST: {Environment.GetEnvironmentVariable("DB_HOST")}");
-Console.WriteLine($"JWT_SECRET_KEY: {Environment.GetEnvironmentVariable("JWT_SECRET_KEY")}");
+app.Run();

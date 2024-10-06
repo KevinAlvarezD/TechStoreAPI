@@ -12,8 +12,8 @@ using TechStore.Data;
 namespace TechStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241004123226_AddAllTables")]
-    partial class AddAllTables
+    [Migration("20241006203101_SeedDataMigration")]
+    partial class SeedDataMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -154,21 +154,29 @@ namespace TechStore.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("email");
+
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("password");
 
                     b.Property<string>("Role")
+                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("role");
 
                     b.Property<string>("Username")
+                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("username");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("users");
                 });
 
             modelBuilder.Entity("TechStore.Models.Order", b =>
