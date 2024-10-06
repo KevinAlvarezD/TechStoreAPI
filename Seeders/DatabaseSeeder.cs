@@ -49,7 +49,6 @@ public class DatabaseSeeder
             _context.SaveChanges(); 
         }
 
-        // 3. Inserta los clientes (son independientes)
         if (!_context.Customers.Any())
         {
             var customers = new Faker<Customer>()
@@ -60,7 +59,7 @@ public class DatabaseSeeder
                 .Generate(10);
 
             _context.Customers.AddRange(customers);
-            _context.SaveChanges(); // Guarda cambios para asegurar que los clientes estén disponibles
+            _context.SaveChanges();
         }
 
         // 4. Inserta las órdenes (que dependen de los clientes)
