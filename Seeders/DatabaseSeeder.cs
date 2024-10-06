@@ -13,7 +13,6 @@ public class DatabaseSeeder
 
     public void Seed()
     {
-        // 1. Inserta las categorías primero
         if (!_context.Categories.Any())
         {
             var categoryFaker = new Faker<Category>()
