@@ -16,16 +16,16 @@ public class Customer
     public int Id { get; set; }
 
     [Column("name")]
-    public string? Name { get; set; }
+    public string Name { get; set; }
 
     [Column("address")]
-    public string? Address { get; set; }
+    public string Address { get; set; }
 
     [Column("phone")]
-    public string? Phone { get; set; }
+    public string Phone { get; set; }
 
     [Column("email")]
-    public string? Email { get; set; }
+    public string Email { get; set; }
 
 
     public Customer()

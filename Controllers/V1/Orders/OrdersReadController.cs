@@ -30,7 +30,7 @@ namespace TechStoreAPI.Controllers.V1.Orders
             {
                 return NotFound();
             }
-            return order;
+            return Ok(order);
         }
     }
 }

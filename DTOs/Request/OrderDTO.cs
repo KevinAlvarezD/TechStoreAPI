@@ -8,6 +8,10 @@ namespace TechStoreAPI.DTOs.Request;
 
 public class OrderDTO
 {
+    [Required(ErrorMessage = "El Id del pedido es requerido.")]
+    [Range(1, int.MaxValue, ErrorMessage = "El Id del pedido debe ser un número entero positivo mayor a 0.")]
+    [Display(Name = "Id del Pedido")]
+    public int Id { get; set; }
 
     [Required(ErrorMessage = "El estado es obligatorio.")]
     [StringLength(50, ErrorMessage = "El estado no puede exceder los 50 caracteres.")]
@@ -28,12 +32,17 @@ public class OrderDTO
     [Range(1, int.MaxValue, ErrorMessage = "El Id del cliente debe ser un número entero positivo mayor a 0.")]
     [Display(Name = "Id del Cliente")]
     public int CustomerId { get; set; }
+
+    public List<OrderProductDTO> OrderProducts { get; set; }
+
+    public List<ProductDTO> Products { get; set; }
+
 }
 
 
 public class FutureDateValidationAttribute : ValidationAttribute
 {
-    protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
     {
         if (value is DateTime date && date > DateTime.Now)
         {

@@ -11,33 +11,20 @@ namespace TechStoreAPI.Controllers.V1.Orders
     public partial class OrdersController : ControllerBase
     {
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, OrderDTO updatedOrder)
+        public async Task<IActionResult> Update(int id, OrderDTO orderDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var checkOrder = await _orderRepository.CheckExistence(id);
-            if (checkOrder == false)
+
+            var updated = await _orderRepository.Update(id, orderDTO);
+            if (!updated)
             {
                 return NotFound();
             }
-
-            var order = await _orderRepository.GetById(id);
-
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            order.Status = updatedOrder.Status;
-            order.OrderDate = updatedOrder.OrderDate;
-            order.TotalAmount = updatedOrder.TotalAmount;
-            order.CustomerId = updatedOrder.CustomerId;
-            
-
-            await _orderRepository.Update(order);
             return NoContent();
+
         }
     }
 }
