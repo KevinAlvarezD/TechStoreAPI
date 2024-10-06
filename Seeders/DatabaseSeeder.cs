@@ -32,10 +32,9 @@ public class DatabaseSeeder
 
             var categories = categoryFaker.Generate(10);
             _context.Categories.AddRange(categories);
-            _context.SaveChanges(); // Guarda cambios para asegurar que las categorías estén disponibles
+            _context.SaveChanges();
         }
 
-        // 2. Inserta los productos (que dependen de las categorías)
         if (!_context.Products.Any())
         {
             var productFaker = new Faker<Product>()
@@ -43,11 +42,11 @@ public class DatabaseSeeder
                 .RuleFor(p => p.Description, f => f.Commerce.ProductDescription())
                 .RuleFor(p => p.Price, f => double.Parse(f.Commerce.Price(10, 1000)))
                 .RuleFor(p => p.Quantity, f => f.Random.Int(0, 100))
-                .RuleFor(p => p.CategoryId, f => f.Random.Int(1, 10)); // Asegúrate de que estos IDs de categoría existan
+                .RuleFor(p => p.CategoryId, f => f.Random.Int(1, 10)); 
 
             var products = productFaker.Generate(100);
             _context.Products.AddRange(products);
-            _context.SaveChanges(); // Guarda cambios para asegurar que los productos estén disponibles
+            _context.SaveChanges(); 
         }
 
         // 3. Inserta los clientes (son independientes)
