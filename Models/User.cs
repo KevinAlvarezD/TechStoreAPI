@@ -28,12 +28,8 @@ public class User
     [Column ("role")]
     public string Role { get; set; }
 
-    public User(string username, string email, string password, string role)
+    public User()
     {
-        Username = username.ToLower().Trim();
-        Email = email.ToLower().Trim();
-        Password = password;
-        Role = role.ToLower().Trim();
     }
 
 }

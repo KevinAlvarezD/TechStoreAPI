@@ -22,10 +22,8 @@ public class Category
     public string? Description { get; set; }
 
 
-    public Category(string name, string description)
+    public Category()
     {
-        Name = name.ToLower().Trim();
-        Description = description.ToLower().Trim();
     }
 
 }

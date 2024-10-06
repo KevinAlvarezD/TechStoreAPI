@@ -20,17 +20,23 @@ namespace TechStoreAPI.Controllers.V1.Users
                 return BadRequest(ModelState);
             }
 
-            var newUser = new User(
+            var newUser = new User
+            {
+                Username = inputUser.Username,
+                Email = inputUser.Email,
+                Password = inputUser.Password, 
+                Role = inputUser.Role 
+            };
 
-            inputUser.Username,
-            inputUser.Email,
-            inputUser.Password = PasswordHasher.HashPassword(inputUser.Password),
-            inputUser.Role
-            );
-
-            await _userRepository.Add(newUser);
-
-            return Ok(newUser);
+            try
+            {
+                await _userRepository.Add(newUser);
+                return Ok(newUser);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ocurrió un error al crear el usuario: {ex.Message}");
+            }
         }
     }
 }

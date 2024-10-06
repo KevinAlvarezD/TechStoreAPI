@@ -33,16 +33,8 @@ public class Product
     [ForeignKey("CategoryId")]
     public Category? Category { get; set; }
 
-
-
-    public Product() { }
-
-    public Product(string name, string description, double price, int quantity, int categoryId) 
+    public Product() 
     {
-        Name = name.ToLower().Trim();
-        Description = description.ToLower().Trim();
-        Price = price;
-        Quantity = quantity;
-        CategoryId = categoryId;
+      
     }
 }

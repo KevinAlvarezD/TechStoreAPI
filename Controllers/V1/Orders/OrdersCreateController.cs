@@ -19,7 +19,7 @@ namespace TechStoreAPI.Controllers.V1.Orders
                 return BadRequest(ModelState);
             }
 
-            var newOrder = new Order(inputOrder.Status, inputOrder.OrderDate, inputOrder.TotalAmount, inputOrder.CustomerId);
+            var newOrder = new Order();
 
             await _orderRepository.Add(newOrder);
 

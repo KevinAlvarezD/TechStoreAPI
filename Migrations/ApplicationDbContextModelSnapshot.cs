@@ -151,21 +151,29 @@ namespace TechStore.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("email");
+
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("password");
 
                     b.Property<string>("Role")
+                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("role");
 
                     b.Property<string>("Username")
+                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("username");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("users");
                 });
 
             modelBuilder.Entity("TechStore.Models.Order", b =>

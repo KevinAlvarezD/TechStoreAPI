@@ -18,13 +18,7 @@ namespace TechStoreAPI.Controllers.V1.Products
                 return BadRequest(ModelState);
             }
 
-            var newProduct = new Product(
-            inputProduct.Name,
-            inputProduct.Description,
-            inputProduct.Price,
-            inputProduct.Quantity,
-            inputProduct.CategoryId
-            );
+            var newProduct = new Product();
 
             await _productRepository.Add(newProduct);
 

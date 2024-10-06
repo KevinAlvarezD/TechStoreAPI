@@ -18,7 +18,7 @@ public partial class CategoriesController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var newCategory = new Category(inputCategory.Name, inputCategory.Description);
+        var newCategory = new Category();
 
         await _categoryRepository.Add(newCategory);
 
