@@ -62,17 +62,16 @@ public class DatabaseSeeder
             _context.SaveChanges();
         }
 
-        // 4. Inserta las órdenes (que dependen de los clientes)
         if (!_context.Orders.Any())
         {
             var orderFaker = new Faker<Order>()
-                .RuleFor(o => o.CustomerId, f => f.Random.Int(1, 10)) // Asegúrate de usar IDs válidos de clientes
+                .RuleFor(o => o.CustomerId, f => f.Random.Int(1, 10)) 
                 .RuleFor(o => o.OrderDate, f => f.Date.Past(1))
                 .RuleFor(o => o.Status, f => f.PickRandom(new[] { "pendiente", "enviado", "entregado" }));
 
             var orders = orderFaker.Generate(20);
             _context.Orders.AddRange(orders);
-            _context.SaveChanges(); // Guarda cambios para asegurar que las órdenes estén disponibles
+            _context.SaveChanges();
         }
     }
 }
